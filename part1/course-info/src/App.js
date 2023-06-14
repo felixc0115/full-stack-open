@@ -1,11 +1,11 @@
-const Header = ({ course }) => <h1>{course}</h1>;
+const Header = ({ title }) => <h1>{title}</h1>;
 
-const Content = ({ parts }) => {
+const Content = ({ course }) => {
   return (
     <>
-      <Part part={parts[0]} />
-      <Part part={parts[1]} />
-      <Part part={parts[2]} />
+      {course.parts.map((part) => (
+        <Part key={part.id} part={part} />
+      ))}
     </>
   );
 };
@@ -22,32 +22,39 @@ const Part = ({ part }) => (
   </p>
 );
 
+const Course = ({ course }) => {
+  return (
+    <>
+      <Header title={course.name} />
+      <Content course={course} />
+    </>
+  );
+};
+
 const App = () => {
   const course = {
+    id: 1,
     name: "Half Stack application development",
     parts: [
       {
         name: "Fundamentals of React",
         exercises: 10,
+        id: 1,
       },
       {
         name: "Using props to pass data",
         exercises: 7,
+        id: 2,
       },
       {
         name: "State of a component",
         exercises: 14,
+        id: 3,
       },
     ],
   };
 
-  return (
-    <div>
-      <Header course={course.name} />
-      <Content parts={course.parts} />
-      <Total parts={course.parts} />
-    </div>
-  );
+  return <Course course={course} />;
 };
 
 export default App;
