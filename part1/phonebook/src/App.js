@@ -8,7 +8,15 @@ const App = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    setPersons(persons.concat({ name: newName }));
+    if (
+      !persons.some(
+        (person) => person.name.toLowerCase() === newName.toLowerCase()
+      )
+    ) {
+      setPersons(persons.concat({ name: newName }));
+    } else {
+      alert(`${newName} is already added to phonebook`);
+    }
     setNewName("");
   };
 
