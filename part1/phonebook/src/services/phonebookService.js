@@ -10,4 +10,5 @@ const create = (personObject) => {
   return axios.post(baseURL, personObject).then((res) => res.data);
 };
 
+const remove = () => {};
 export default { getAll, create };
