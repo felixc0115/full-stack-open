@@ -25,6 +25,7 @@ const App = () => {
       )
     ) {
       const newPerson = { name: newName, number: newNumber };
+
       phonebookService.create(newPerson).then((res) => {
         setPersons([...persons, res]);
       });
@@ -33,6 +34,13 @@ const App = () => {
     }
     setNewName("");
     setNewNumber("");
+  };
+
+  const deletePerson = (id, name) => {
+    if (window.confirm(`Delete ${name}`)) {
+      phonebookService.remove(id);
+      setPersons(persons.filter((person) => person.id !== id));
+    }
   };
 
   const nameChangeHandler = (e) => setNewName(e.target.value);
@@ -57,7 +65,7 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      <Persons displayed={displayed} />
+      <Persons deletePerson={deletePerson} displayed={displayed} />
     </div>
   );
 };
