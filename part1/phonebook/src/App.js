@@ -30,7 +30,22 @@ const App = () => {
         setPersons([...persons, res]);
       });
     } else {
-      alert(`${newName} is already added to phonebook`);
+      if (
+        window.confirm(
+          `${newName} is already added to phonebook, replace old number with a new one?`
+        )
+      ) {
+        const existingPerson = persons.find(
+          (person) => person.name === newName
+        );
+        const unchangedPeople = persons.filter(
+          (person) => person.id !== existingPerson.id
+        );
+        console.log(unchangedPeople);
+        phonebookService
+          .update(existingPerson.id, existingPerson.name, newNumber)
+          .then((res) => setPersons([...unchangedPeople, res]));
+      }
     }
     setNewName("");
     setNewNumber("");
