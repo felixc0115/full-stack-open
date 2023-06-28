@@ -11,7 +11,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
-  const [statusMsg, setStatusMsg] = useState(null);
+  const [statusMsg, setStatusMsg] = useState({ status: null, message: null });
 
   useEffect(() => {
     phonebookService.getAll().then((res) => {
@@ -31,8 +31,8 @@ const App = () => {
       phonebookService.create(newPerson).then((res) => {
         setPersons([...persons, res]);
       });
-      setStatusMsg(`Added ${newName}`);
-      setTimeout(() => setStatusMsg(null), 5000);
+      setStatusMsg({ status: "success", message: `Added ${newName}` });
+      setTimeout(() => setStatusMsg({ status: null, message: null }), 5000);
     } else {
       if (
         window.confirm(
@@ -47,7 +47,16 @@ const App = () => {
         );
         phonebookService
           .update(existingPerson.id, existingPerson.name, newNumber)
-          .then((res) => setPersons([...unchangedPeople, res]));
+          .then((res) => setPersons([...unchangedPeople, res]))
+          .catch(() => {
+            setStatusMsg({
+              status: "error",
+              message: `Information of ${existingPerson.name} has already been removed from server`,
+            });
+            setTimeout(() => {
+              setStatusMsg({ status: null, message: null });
+            }, 5000);
+          });
       }
     }
     setNewName("");
@@ -72,7 +81,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={statusMsg} />
+      <Notification status={statusMsg} />
       <Filter filter={filter} filterChangeHandler={filterChangeHandler} />
       <h2>add a new</h2>
       <PersonForm
