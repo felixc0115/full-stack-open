@@ -41,7 +41,6 @@ const App = () => {
         const unchangedPeople = persons.filter(
           (person) => person.id !== existingPerson.id
         );
-        console.log(unchangedPeople);
         phonebookService
           .update(existingPerson.id, existingPerson.name, newNumber)
           .then((res) => setPersons([...unchangedPeople, res]));
