@@ -35,7 +35,10 @@ function App() {
       {countriesToDisplay.length > 10 ? (
         <p>Too many matches, specify another filter</p>
       ) : (
-        <Countries countries={countriesToDisplay} />
+        <Countries
+          setCountry={setCountriesToDisplay}
+          countries={countriesToDisplay}
+        />
       )}
     </div>
   );
