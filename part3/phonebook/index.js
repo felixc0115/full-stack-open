@@ -24,6 +24,8 @@ let people = [
   },
 ];
 
+app.use(express.json());
+
 app.get("/api/persons", (req, res) => {
   res.json(people);
 });
@@ -49,6 +51,18 @@ app.delete("/api/persons/:id", (req, res) => {
   const id = Number(req.params.id);
   people = people.filter((person) => person.id !== id);
   res.status(204).end();
+});
+
+app.post("/api/persons", (req, res) => {
+  const newPerson = req.body;
+  if (!newPerson.name) {
+    res.status(404).send({ error: "name must not be empty" });
+  } else if (!newPerson.number) {
+    res.status(404).send({ error: "number must not be empty" });
+  } else if (people.some((person) => person.name.includes(newPerson.name))) {
+    res.status(404).send({ error: "name must be unique" });
+  }
+  res.status(200).end();
 });
 
 const PORT = 3001;
