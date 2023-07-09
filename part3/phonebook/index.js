@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const morgan = require("morgan");
 
 let people = [
   {
@@ -24,7 +25,25 @@ let people = [
   },
 ];
 
+morgan.token("body", function (req, res) {
+  return JSON.stringify(req.body);
+});
+
 app.use(express.json());
+app.use(
+  morgan(function (tokens, req, res) {
+    return [
+      tokens.method(req, res),
+      tokens.url(req, res),
+      tokens.status(req, res),
+      tokens.res(req, res, "Content-Length"),
+      "-",
+      tokens["response-time"](req, res),
+      "ms",
+      tokens.body(req, res),
+    ].join(" ");
+  })
+);
 
 app.get("/api/persons", (req, res) => {
   res.json(people);
@@ -61,8 +80,9 @@ app.post("/api/persons", (req, res) => {
     res.status(404).send({ error: "number must not be empty" });
   } else if (people.some((person) => person.name.includes(newPerson.name))) {
     res.status(404).send({ error: "name must be unique" });
+  } else {
+    res.status(200).end();
   }
-  res.status(200).end();
 });
 
 const PORT = 3001;
