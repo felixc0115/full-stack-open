@@ -1,0 +1,26 @@
+# fly.toml app configuration file generated for white-smoke-9117 on 2023-07-18T10:19:46-04:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+
+
+app = "white-smoke-9117"
+primary_region = "atl"
+
+[env]
+  PORT = "8080"
+
+[experimental]
+  auto_rollback = true
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  [http_service.concurrency]
+    type = "requests"
+    soft_limit = 200
+    hard_limit = 250
