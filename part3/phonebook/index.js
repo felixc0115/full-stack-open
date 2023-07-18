@@ -85,11 +85,11 @@ app.post("/api/persons", (req, res) => {
   } else if (people.some((person) => person.name.includes(newPerson.name))) {
     res.status(404).send({ error: "name must be unique" });
   } else {
-    res.status(200).end();
+    res.status(200).json(newPerson);
   }
 });
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
