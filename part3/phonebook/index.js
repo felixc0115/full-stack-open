@@ -1,30 +1,9 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
 const cors = require("cors");
-
-let people = [
-  {
-    id: 1,
-    name: "Arto Hellas",
-    number: "040-123456",
-  },
-  {
-    id: 2,
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-  },
-  {
-    id: 3,
-    name: "Dan Abramov",
-    number: "12-43-234345",
-  },
-  {
-    id: 4,
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-  },
-];
+const Person = require("./models/person");
 
 morgan.token("body", function (req, res) {
   return JSON.stringify(req.body);
@@ -50,7 +29,9 @@ app.use(
 app.use(express.static("build"));
 
 app.get("/api/persons", (req, res) => {
-  res.json(people);
+  Person.find({}).then((people) => {
+    res.json(people);
+  });
 });
 
 app.get("/info", (req, res) => {
@@ -77,19 +58,20 @@ app.delete("/api/persons/:id", (req, res) => {
 });
 
 app.post("/api/persons", (req, res) => {
-  const newPerson = req.body;
-  if (!newPerson.name) {
-    res.status(404).send({ error: "name must not be empty" });
-  } else if (!newPerson.number) {
-    res.status(404).send({ error: "number must not be empty" });
-  } else if (people.some((person) => person.name.includes(newPerson.name))) {
-    res.status(404).send({ error: "name must be unique" });
-  } else {
-    res.status(200).json(newPerson);
-  }
+  const { name, number } = req.body;
+
+  const person = new Person({
+    name,
+    number,
+  });
+
+  person.save().then((result) => {
+    res.json(result);
+    console.log(result);
+  });
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
