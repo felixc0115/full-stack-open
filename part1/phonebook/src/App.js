@@ -28,11 +28,20 @@ const App = () => {
     ) {
       const newPerson = { name: newName, number: newNumber };
 
-      phonebookService.create(newPerson).then((res) => {
-        setPersons([...persons, res]);
-      });
-      setStatusMsg({ status: "success", message: `Added ${newName}` });
-      setTimeout(() => setStatusMsg({ status: null, message: null }), 5000);
+      phonebookService
+        .create(newPerson)
+        .then((res) => {
+          setPersons([...persons, res]);
+          setStatusMsg({ status: "success", message: `Added ${newName}` });
+          setTimeout(() => setStatusMsg({ status: null, message: null }), 5000);
+          setNewName("");
+          setNewNumber("");
+        })
+        .catch((error) => {
+          console.log(error.response.data.error);
+          setStatusMsg({ status: "error", message: error.response.data.error });
+          setTimeout(() => setStatusMsg({ status: null, message: null }), 5000);
+        });
     } else {
       if (
         window.confirm(
@@ -47,7 +56,11 @@ const App = () => {
         );
         phonebookService
           .update(existingPerson.id, existingPerson.name, newNumber)
-          .then((res) => setPersons([...unchangedPeople, res]))
+          .then((res) => {
+            setPersons([...unchangedPeople, res]);
+            setNewName("");
+            setNewNumber("");
+          })
           .catch(() => {
             setStatusMsg({
               status: "error",
@@ -59,8 +72,6 @@ const App = () => {
           });
       }
     }
-    setNewName("");
-    setNewNumber("");
   };
 
   const deletePerson = (id, name) => {
