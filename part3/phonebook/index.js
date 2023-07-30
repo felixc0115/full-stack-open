@@ -5,7 +5,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 const Person = require("./models/person");
 
-morgan.token("body", function (req, res) {
+morgan.token("body", function (req) {
   return JSON.stringify(req.body);
 });
 
@@ -33,12 +33,6 @@ app.get("/api/persons", (req, res) => {
   });
 });
 
-app.get("/info", (req, res) => {
-  res.send(
-    `<p>Phonebook has info for ${people.length} people</p> <p>${new Date()}</p>`
-  );
-});
-
 app.get("/api/persons/:id", (req, res, next) => {
   Person.findById(req.params.id)
     .then((person) => {
@@ -53,10 +47,8 @@ app.get("/api/persons/:id", (req, res, next) => {
     });
 });
 
-app.delete("/api/persons/:id", (req, res, next) => {
-  Person.findByIdAndRemove(req.params.id).then((result) =>
-    res.status(204).end()
-  );
+app.delete("/api/persons/:id", (req, res) => {
+  Person.findByIdAndRemove(req.params.id).then(() => res.status(204).end());
 });
 
 app.post("/api/persons", (req, res, next) => {

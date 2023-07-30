@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "lint": "eslint .",
     "start": "node index.js",
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -21,6 +22,7 @@
   },
   "devDependencies": {
     "@flydotio/dockerfile": "^0.3.3",
+    "eslint": "^8.46.0",
     "nodemon": "^2.0.22"
   }
 }
