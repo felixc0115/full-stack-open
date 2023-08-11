@@ -11,4 +11,17 @@ const findFavorite = (blogs) => {
   return { title, author, likes };
 };
 
-module.exports = { totalLikes, findFavorite };
+const mostBlogs = (blogs) => {
+  const authors = {};
+  blogs.forEach((blog) =>
+    authors[blog.author] ? authors[blog.author]++ : (authors[blog.author] = 1)
+  );
+
+  const authorWithMostBlogs = Object.keys(authors).reduce((a, b) =>
+    authors[a] > authors[b] ? a : b
+  );
+
+  return { author: authorWithMostBlogs, blogs: authors[authorWithMostBlogs] };
+};
+
+module.exports = { totalLikes, findFavorite, mostBlogs };
