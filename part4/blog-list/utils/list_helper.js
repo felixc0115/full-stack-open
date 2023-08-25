@@ -34,8 +34,7 @@ const mostLikes = (blogs) => {
   const authorWithMostLikes = Object.keys(authors).reduce((a, b) =>
     authors[a] > authors[b] ? a : b
   );
-  console.log(authors);
-  console.log(authorWithMostLikes);
+
   return { author: authorWithMostLikes, likes: authors[authorWithMostLikes] };
 };
 
