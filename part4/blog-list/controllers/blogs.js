@@ -9,6 +9,9 @@ blogsRouter.get("/", (request, response) => {
 
 blogsRouter.post("/", (request, response) => {
   const body = request.body;
+  if (!body.likes) {
+    body.likes = 0;
+  }
   const blog = new Blog(body);
 
   blog.save().then((result) => {

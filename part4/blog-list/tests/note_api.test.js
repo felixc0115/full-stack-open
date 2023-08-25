@@ -49,8 +49,20 @@ test("creating a new blog post increases total blogs by 1", async () => {
   };
   await api.post("/api/blogs", testBlog);
   const response = await api.get("/api/blogs");
-  console.log(response.body.length);
   expect(response.body).toHaveLength(initialBlogs.length + 1);
+});
+
+test("if likes property is missing, set default value of likes to 0", async () => {
+  const noLikesBlog = {
+    title: "blog3",
+    author: "felix3",
+    url: "www.google.com",
+  };
+
+  const response = await api.post("/api/blogs", noLikesBlog);
+  const likes = response.body.likes;
+  console.log(response.body, likes);
+  expect(likes).toBe(0);
 });
 
 afterAll(async () => await mongoose.connection.close());
